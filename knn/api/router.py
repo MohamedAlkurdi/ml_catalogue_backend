@@ -2,7 +2,6 @@ from fastapi import File, UploadFile, HTTPException, Body, APIRouter
 import pandas as pd
 import io
 import numpy as np
-from sklearn.decomposition import PCA
 
 # Add the parent directory to Python path
 
