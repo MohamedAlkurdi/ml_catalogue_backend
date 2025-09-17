@@ -1,0 +1,68 @@
+the start of main function
+
+print dataset
+print the type of dataset
+
+initiate an array to collect the data of the main function between each recursive call
+
+append the last version of the processed data object, which will be part of 
+the decision tree visualization, the processed data object get updated during the 
+function flow, and in the end of it, this version will be returned as the final result,
+or it will be passed to the parent function recursivly, while the very first call of 
+the function will acsept this argument as an empty object => {}
+
+initiate a current_node object that represents the current decision tree state, it 
+will wither turn out to be a leaf node, or it will split to new branches, the 
+properties of this node object are "feature", "prediction" and "children", 
+
+initiate next_layer_nodes object to store the tables data of the children nodes
+
+define a target_index assuming that it is always the last index of the dataset.
+
+define a variable called dataset_criteria_object and assign the output of 
+process_table(data_set) to it
+
+by assigning the process_table(data_set) to dataset_criteria_object variable, the 
+function will be called and executed, this function does the following:
+- extracts the columns labels of the dataset
+- calculates the target index
+- fetches the target column as a list using target index
+- calculates the entropy of the target column
+- initiate an object called coulmns_information_gain to store all the information gains in one source
+- initiate an object called coulmns_gain_ratios to store all the gain ratios in one source
+- drops the target column from the dataset so it can proceed to caclulate the informations of other columns
+-- if the entropy of target columns is 0, if so it returns {"is_leaf":True,"value":target_column[0]}, where value is the majority class
+- else, each column will be converted to list (array), and its information_gain_value, gain ratio and entropy will be calculated
+- finally, it returns {"is_leaf":False,"value":max(coulmns_information_gain, key=coulmns_information_gain.get)}, where value contains the lable of the best column
+
+after calling the process_table() function, we will handle the output whether it is a leaf node or a new root node
+
+if the output is leaf, the state of the current node will be like: "prediction"=majority class, "feature"=None, "children"={}
+
+else, the current node will be a new root, by using the returned value from process_table(), where it is the label of the best column
+
+root column will be extracted from the main dataset and assigned to a variable called "root"
+
+after fetching the root column, the different values types inside of it will be counted
+
+going back to the main dataset, since the current node is know, it will be execluded from the main dataset to be split depending of the different value tupes in the Root column
+
+initiate an object (or dict in python) called classes_dict, this object will store the results of the new split
+
+for each different value type in the current root, we will create a property in the classes_dict that has the same name, and a {} will be assigned to it, so far the structure will look like: 
+{'Sunny': {}, 'Overcast': {}, 'Rainy': {}}
+
+each value class in the root column, that was saved as an empty object in the classes_dict object, will contain under it properties with the names of other features in the dataset, and this child property will have an empty list, 
+so far the structure will look like: {'Sunny': {'Temperature': [], 'Humidity': [], 'Windy': [], 'PlayTennis': []}, 'Overcast': {'Temperature': [], 'Humidity': [], 'Windy': [], 'PlayTennis': []}, 'Rainy': {'Temperature': [], 'Humidity': [], 'Windy': [], 'PlayTennis': []}}
+
+after initiating the classes_dict, it will be filled with data, so it will look like: 
+{'Sunny': {'Temperature': ['Hot', 'Hot', 'Mild', 'Cool', 'Mild'], 'Humidity': ['High', 'High', 'High', 'Normal', 'Normal'], 'Windy': [False, True, False, False, True], 'PlayTennis': ['No', 'No', 'No', 'Yes', 'Yes']}, 'Overcast': {'Temperature': ['Hot', 'Cool', 'Mild', 'Hot'], 'Humidity': ['High', 'Normal', 'High', 'Normal'], 'Windy': [False, True, True, False], 'PlayTennis': ['Yes', 'Yes', 'Yes', 'Yes']}, 'Rainy': {'Temperature': ['Mild', 'Cool', 'Cool', 'Mild', 'Mild'], 'Humidity': ['High', 'Normal', 'Normal', 'Normal', 'High'], 'Windy': [False, False, True, False, True], 'PlayTennis': ['Yes', 'Yes', 'No', 'Yes', 'No']}}
+
+classes_dict will be sperated into tables depending the highest level properties
+
+tables will be push to the next_layer_nodes object
+
+each table label will be added to the children property in the current node, and the value of it will be the output of main(next_layer_nodes.get(table),classes_dict)
+
+
+

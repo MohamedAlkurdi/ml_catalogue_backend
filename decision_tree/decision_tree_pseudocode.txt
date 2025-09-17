@@ -1,0 +1,30 @@
+assuming that dataset(csv file) and target index are accepted as arguments:
+
+-handle continuous datasets automatically
+
+- set the target column
+
+- extract the features list (dataset.column)
+
+- calculate the Entropy of target column
+
+- If all target values are the same: Return a leaf node with that class (Pure Node)
+
+- If the dataset has no more features (only target column is left): Return a leaf node with the majority class in the target column
+
+- calulate the Information Gain for each feature column (dataset[feature])
+
+- select the column with the heighest Information Gain as the ROOT ===> best feature
+
+- For each unique value in 'best_feature':
+-- Create a branch for this value
+-- Create a sub-dataset where rows have:
+--- best_feature == current value
+--- drop the 'best_feature' column
+-- If the sub-dataset is empty: Create a leaf node with the majority class from the original dataset
+-- Else: Recursively call build_tree(sub-dataset, target_column)
+
+- each branch will have its own subdataset, here is how it will be created:
+-- depending on the baranch data type, by looking at the previous version of the dataset (the state of the data table in the previous node), the other values from each column (execluding the one with best Information Gain) on the SAME ROW will be selected.
+
+- check a stop condition (not sure what it should be yet, is it the number of rows? or the latest IG value?)
