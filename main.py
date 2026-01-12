@@ -52,7 +52,7 @@ def root():
     
 @app.get("/demo")
 def get_demo_file():
-    file_path = '../examples/example.csv'
+    file_path = './examples/example.csv'
     logger.info("entered get_demo_file function")
     if os.path.exists(file_path):
         logger.info("from get_demo_file: path does not exist")
