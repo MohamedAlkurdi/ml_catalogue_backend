@@ -1,5 +1,6 @@
 import sys
 import os
+from fastapi.responses import FileResponse
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -9,10 +10,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from bayes_classifier.api.router import router as bayes_router
 from knn.api.router import router as knn_router  
 from decision_tree.api.router import router as dt_router
-from common.exmaple_router import router as example_router
 
 from common.middleware import add_logging_middleware
 from common.config import settings
+import logging 
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title=settings.api_title,
@@ -34,7 +37,6 @@ add_logging_middleware(app)
 app.include_router(bayes_router, prefix="/bayes", tags=["Bayes Classifier"])
 app.include_router(knn_router, prefix="/knn", tags=["K-Nearest Neighbors"])
 app.include_router(dt_router, prefix="/dt", tags=["Decision Tree"])
-app.include_router(example_router, prefix="/examples", tags=["Example Files"])
 
 @app.get("/")
 def root():
@@ -42,8 +44,18 @@ def root():
         "message": "Unified ML Algorithms API",
         "algorithms": ["bayes_classifier", "knn", "decision_tree"],
         "endpoints": {
-            "bayes_classifier": ["/bayes/preview-csv", "/bayes/process-csv"],
-            "knn": ["/knn/preview-csv", "/knn/process-csv"],
-            "decision_tree": ["/dt/preview-csv", "/dt/process-csv"]
+            "bayes_classifier": ["/bayes", "/bayes/preview-csv", "/bayes/process-csv"],
+            "knn": ["/knn", "/knn/preview-csv", "/knn/process-csv"],
+            "decision_tree": ["/dt", "/dt/preview-csv", "/dt/process-csv"]
         }
     }
+    
+@app.get("/demo")
+def get_demo_file():
+    file_path = '../examples/example.csv'
+    logger.info("entered get_demo_file function")
+    if os.path.exists(file_path):
+        logger.info("from get_demo_file: path does not exist")
+        return FileResponse(file_path)
+    logger.info("from get_demo_file: path exists")
+    return {"error": "File not found"}
